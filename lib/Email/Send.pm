@@ -1,9 +1,9 @@
 package Email::Send;
-# $Id: Send.pm,v 1.2 2004/06/29 12:32:55 cwest Exp $
+# $Id: Send.pm,v 1.3 2004/06/29 14:19:09 cwest Exp $
 use strict;
 
 use vars qw[$VERSION];
-$VERSION   = '1.2';
+$VERSION   = '1.3';
 
 use Carp qw[croak];
 use Email::Abstract;
@@ -15,7 +15,7 @@ Email::Send - Simply Sending Email
 =head1 SYNOPSIS
 
   use Email::Send;
-  send SMTP => <<__MESSAGE__, $host;
+  send SMTP => <<'__MESSAGE__', $host;
   To: casey@geeknest.com
   From: foo@example.com
 

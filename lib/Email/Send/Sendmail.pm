@@ -33,9 +33,9 @@ This mailer for C<Email::Send> uses C<sendmail> to send a message. It
 I<does not> try hard to find the executable. It just calls
 C<sendmail> and expects it to be in your path. If that's not the
 case, or you want to explicitly define the location of your executable,
-alter the C<$Email::Send::Qmail::SENDMAIL> package variable.
+alter the C<$Email::Send::Sendmail::SENDMAIL> package variable.
 
-  $Email::Send::Qmail::SENDMAIL = '/usr/sbin/sendmail';
+  $Email::Send::Sendmail::SENDMAIL = '/usr/sbin/sendmail';
 
 Any arguments passed to C<send> will be passed to C<sendmail>. The
 C<-t -oi> arguments are sent automatically.

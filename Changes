@@ -1,3 +1,7 @@
+1.3    2004-07-05
+
+  - Doc typo in Email::Send::Sendmail (Martin 'Kingpin' Thurn).
+
 1.2    2004-06-29
 
   - Email::Send::SMTP now sends multiple MAIL commands for
