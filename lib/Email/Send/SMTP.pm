@@ -1,9 +1,9 @@
 package Email::Send::SMTP;
-# $Id: SMTP.pm,v 1.1 2004/05/28 02:18:16 cwest Exp $
+# $Id: SMTP.pm,v 1.2 2004/06/29 12:32:56 cwest Exp $
 use strict;
 
 use vars qw[$VERSION $SMTP];
-$VERSION = (qw$Revision: 1.1 $)[1];
+$VERSION = (qw$Revision: 1.2 $)[1];
 use Net::SMTP;
 use Email::Address;
 
@@ -15,7 +15,12 @@ sub send {
         return unless $SMTP;
     }
     $SMTP->mail( (Email::Address->parse($message->header('From')))[0]->address );
-    $SMTP->to(   (Email::Address->parse($message->header('To'  )))[0]->address );
+
+    $SMTP->to( (map $_->address, Email::Address->parse($message->header('To')),
+                                 Email::Address->parse($message->header('Cc')) ),
+               { SkipBad => 1 },
+             ) || return;
+
     return unless $SMTP->data( $message->as_string );
     return 1;
 }
@@ -45,7 +50,7 @@ an SMTP server. The first invocation of C<send> requires an SMTP server
 arguments. Subsequent calls will remember the the first setting until
 it is reset.
 
-Any arguments passed to C<send> will be passed to C<Net::SMTP->new>.
+Any arguments passed to C<send> will be passed to C<< Net::SMTP->new() >>.
 
 =head1 SEE ALSO
 
