@@ -8,6 +8,7 @@ WriteMakefile (
                                  'Test::More'        => '0.47',
                                  'Email::Address'    => '',
                                  'Email::Simple'     => '',
+                                 'Return::Value' => '1.22',
                                 },
                VERSION_FROM  => 'lib/Email/Send.pm',
               );

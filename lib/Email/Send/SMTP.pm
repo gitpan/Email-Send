@@ -1,11 +1,12 @@
 package Email::Send::SMTP;
-# $Id: SMTP.pm,v 1.5 2004/08/07 19:26:05 cwest Exp $
+# $Id: SMTP.pm,v 1.6 2004/12/17 18:23:00 cwest Exp $
 use strict;
 
 use vars qw[$VERSION $SMTP];
-$VERSION = (qw$Revision: 1.5 $)[1];
+$VERSION = (qw$Revision: 1.6 $)[1];
 use Net::SMTP;
 use Email::Address;
+use Return::Value;
 
 sub send {
     my ($message, @args) = @_;
@@ -19,31 +20,50 @@ sub send {
             %args = @args;
         }
 
+        my $host = delete($args{Host});
         if ( $args{ssl} ) {
             require Net::SMTP::SSL;
             $SMTP->quit if $SMTP;
-            $SMTP = Net::SMTP::SSL->new(delete($args{Host}), %args);
-            return unless $SMTP;
+            $SMTP = Net::SMTP::SSL->new($host, %args);
+            return failure "Couldn't connect to $host" unless $SMTP;
         } else {
             $SMTP->quit if $SMTP;
-            $SMTP = Net::SMTP->new(delete($args{Host}), %args);
-            return unless $SMTP;
+            $SMTP = Net::SMTP->new($host, %args);
+            return failure "Couldn't connect to $host" unless $SMTP;
         }
         
         my ($user, $pass)
           = @args{qw[username password]};
-        $SMTP->auth($user, $pass) if $user;
+        if ( $user ) {
+            $SMTP->auth($user, $pass)
+              or return failure "Couldn't authenticate '$user:...'";
+        }
     }
-    $SMTP->mail( (Email::Address->parse($message->header('From')))[0]->address );
+    
+    my @bad;
+    eval {
+        my $from =
+          (Email::Address->parse($message->header('From')))[0]->address;
+        $SMTP->mail($from) or return failure "FROM: <$from> denied";
 
-    $SMTP->to( (map $_->address, Email::Address->parse($message->header('To' )),
-                                 Email::Address->parse($message->header('Cc' )),
-                                 Email::Address->parse($message->header('Bcc')) ),
-               { SkipBad => 1 },
-             ) || return;
+        my @to = map {
+                       Email::Address->parse($message->header($_))->address,
+                 } qw[To Cc Bcc];
+        my @ok = $SMTP->to(@to, { SkipBad => 1 });
 
-    return unless $SMTP->data( $message->as_string );
-    return 1;
+        if ( @to != @ok ) {
+            my %to; @to{@to} = (1) x @to;
+            delete @to{@ok};
+            @bad = keys %to;
+        }
+    } or return failure $@;
+    
+    return failure "Can't send data"
+      unless $SMTP->data( $message->as_string );
+
+    return success "Message sent", prop => {
+        bad => [ @bad ],
+    };
 }
 
 sub DESTROY {
@@ -76,12 +96,41 @@ with some exceptions. C<username> and C<password>, if passed, are
 used to invoke C<< Net::SMTP->auth() >> for SASL authentication support.
 C<ssl>, if set to true, turns on SSL support by using C<Net::SMTP::SSL>.
 
+SMTP can fail for a number of reasons. All return values from this
+package are true or false. If false, sending has failed. If true,
+send succeeded. The return values are C<Return::Value> objects, however,
+and contain more information on just what went wrong.
+
+Here is an example of dealing with failure.
+
+  my $return = send SMTP => $message, 'localhost';
+  
+  die "$return" if ! $return;
+
+The stringified version of the return value will have the text of the
+error. In a conditional, a failure will evaluate to false.
+
+Here's an example of dealing with success. It is the case that some
+email addresses may not succeed but others will. In this case, the
+return value's C<bad> property is set to a list of bad addresses.
+
+  my $return = send SMTP => $message, 'localhost';
+
+  if ( $return ) {
+      my @bad = @{ $return->prop('bad') };
+      warn "Failed to send to: " . join ', ', @bad
+        if @bad;
+  }
+
+For more information on these return values, see L<Return::Value>.
+
 =head1 SEE ALSO
 
 L<Email::Send>,
 L<Net::SMTP>,
 L<Net::SMTP::SSL>,
 L<Email::Address>,
+L<Return::Value>,
 L<perl>.
 
 =head1 AUTHOR

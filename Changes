@@ -1,3 +1,11 @@
+1.44   2004-12-17
+
+  - Make Email::Send::SMTP use Return::Value for its returns. These
+    are compatible with previous behavior, but offer more detail on
+    just what went wrong.
+  - Require Return::Value as a dependency. Other mailers may begin
+    using it for returns in the future.
+
 1.43   2004-08-07
 
   - Make Email::Send::SMTP send args to Net::SMTP with host first.

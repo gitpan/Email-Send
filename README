@@ -59,6 +59,13 @@ DESCRIPTION
         whose class is "Email::Simple", or inherits from "Email::Simple"
         like "Email::MIME".
 
+        Send is exported at compile time, unless the caller already has a
+        function called "send". If you don't want "send" to be exported,
+        please load this module using "require" instead of "use". Here's an
+        example.
+
+          require Email::Send;
+
   Writing Mailers
     Writing new mailers is very simple. If you want to use a short name when
     calling "send", name your mailer under the "Email::Send" namespace. If

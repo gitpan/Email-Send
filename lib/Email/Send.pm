@@ -1,9 +1,9 @@
 package Email::Send;
-# $Id: Send.pm,v 1.7 2004/08/07 19:26:05 cwest Exp $
+# $Id: Send.pm,v 1.8 2004/12/17 18:23:00 cwest Exp $
 use strict;
 
 use vars qw[$VERSION];
-$VERSION   = '1.43';
+$VERSION   = '1.44';
 
 use Carp qw[croak];
 use Email::Simple;
@@ -58,7 +58,8 @@ sub import {
     {
       my $pkg = caller;
       no strict 'refs';
-      *{"$pkg\::send"} = \&send;
+      *{"$pkg\::send"} = \&send
+        unless $pkg->can('send');
     }
     return unless @mailers;
     _init_mailer($_) for @mailers;
@@ -88,6 +89,13 @@ documentation for instructions on how to extend it.
 Otherwise you may pass a message as a text string, or as an object whose
 class is C<Email::Simple>, or inherits from C<Email::Simple> like
 C<Email::MIME>.
+
+Send is exported at compile time, unless the caller already has a
+function called C<send>. If you don't want C<send> to be exported,
+please load this module using C<require> instead of C<use>. Here's an
+example.
+
+  require Email::Send;
 
 =back
 
