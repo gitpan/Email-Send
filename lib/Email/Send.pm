@@ -1,12 +1,12 @@
 package Email::Send;
-# $Id: Send.pm,v 1.5 2004/07/20 22:11:46 cwest Exp $
+# $Id: Send.pm,v 1.6 2004/07/30 01:39:42 cwest Exp $
 use strict;
 
 use vars qw[$VERSION];
-$VERSION   = '1.41';
+$VERSION   = '1.42';
 
 use Carp qw[croak];
-use Email::Abstract;
+use Email::Simple;
 
 =head1 NAME
 
@@ -78,12 +78,16 @@ directly to C<$mailer>. Note that various mailers may require certain
 arguments. Please consult the documentation for any mailer you choose
 to use.
 
-The format of C<$message> is specified exactly as anything that
-L<Email::Abstract|Email::Abstract> can grok and return C<as_string>.
-This currently includes most email building classes and a properly
-formatted message as a string. If you have a message type that
-C<Email::Abstract> doesn't understand, read its documentation for
-instructions on how to extend it.
+If C<Email::Abstract> is installed, the format of C<$message> is
+specified exactly as anything that L<Email::Abstract|Email::Abstract>
+can grok and return C<as_string>. This currently includes most email
+building classes and a properly formatted message as a string. If you
+have a message type that C<Email::Abstract> doesn't understand, read its
+documentation for instructions on how to extend it.
+
+Otherwise you may pass a message as a text string, or as an object whose
+class is C<Email::Simple>, or inherits from C<Email::Simple> like
+C<Email::MIME>.
 
 =back
 
@@ -92,11 +96,23 @@ instructions on how to extend it.
 sub send ($$;@) {
     my ($mailer, $message, @args) = @_;
     my $package = _init_mailer($mailer);
-    no strict 'refs';
-    $message = Email::Simple->new(Email::Abstract->as_string($message));
+    
+    $message = _objectify_message($message);
+
     return unless defined $message;
     local $Carp::CarpLevel = -1;
+    no strict 'refs';
     &{"$package\::send"}($message, @args);
+}
+
+sub _objectify_message {
+    my $message = shift;
+
+    return $message if UNIVERSAL::isa($message, 'Email::Simple');
+    return Email::Simple->new($message) unless ref($message);
+    return Email::Abstract->cast($message => 'Email::Simple')
+      if eval 'require Email::Abstract';
+    return undef;
 }
 
 sub _init_mailer {

@@ -1,3 +1,8 @@
+1.42   2004-07-29
+
+  - Remove hard dependency on Email::Abstract (for IO::All).
+  - Declare hard dependency on Email::Simple.
+
 1.41   2004-07-20
 
   - Only set defaults for $Sendmail and $Qmail in those mailers

@@ -3,7 +3,7 @@ NAME
 
 SYNOPSIS
       use Email::Send;
-      send SMTP => <<__MESSAGE__, $host;
+      send SMTP => <<'__MESSAGE__', $host;
       To: casey@geeknest.com
       From: foo@example.com
 
@@ -48,12 +48,16 @@ DESCRIPTION
         arguments. Please consult the documentation for any mailer you
         choose to use.
 
-        The format of $message is specified exactly as anything that
-        Email::Abstract can grok and return "as_string". This currently
-        includes most email building classes and a properly formatted
-        message as a string. If you have a message type that
-        "Email::Abstract" doesn't understand, read its documentation for
-        instructions on how to extend it.
+        If "Email::Abstract" is installed, the format of $message is
+        specified exactly as anything that Email::Abstract can grok and
+        return "as_string". This currently includes most email building
+        classes and a properly formatted message as a string. If you have a
+        message type that "Email::Abstract" doesn't understand, read its
+        documentation for instructions on how to extend it.
+
+        Otherwise you may pass a message as a text string, or as an object
+        whose class is "Email::Simple", or inherits from "Email::Simple"
+        like "Email::MIME".
 
   Writing Mailers
     Writing new mailers is very simple. If you want to use a short name when
