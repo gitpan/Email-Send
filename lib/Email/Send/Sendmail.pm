@@ -1,9 +1,9 @@
 package Email::Send::Sendmail;
-# $Id: Sendmail.pm,v 1.1 2004/05/28 02:18:16 cwest Exp $
+# $Id: Sendmail.pm,v 1.2 2004/07/08 16:40:05 cwest Exp $
 use strict;
 
 use vars qw[$VERSION $SENDMAIL];
-$VERSION  = (qw$Revision: 1.1 $)[1];
+$VERSION  = (qw$Revision: 1.2 $)[1];
 $SENDMAIL = q[sendmail];
 
 sub send {

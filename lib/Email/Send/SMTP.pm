@@ -1,9 +1,9 @@
 package Email::Send::SMTP;
-# $Id: SMTP.pm,v 1.2 2004/06/29 12:32:56 cwest Exp $
+# $Id: SMTP.pm,v 1.3 2004/07/08 16:40:05 cwest Exp $
 use strict;
 
 use vars qw[$VERSION $SMTP];
-$VERSION = (qw$Revision: 1.2 $)[1];
+$VERSION = (qw$Revision: 1.3 $)[1];
 use Net::SMTP;
 use Email::Address;
 
@@ -13,11 +13,16 @@ sub send {
         $SMTP->quit if $SMTP;
         $SMTP = Net::SMTP->new(@args);
         return unless $SMTP;
+        
+        my ($user, $pass)
+          = @{{ @args % 2 ? (@args[1..$#args]) : (@args) }}{qw[username password]};
+        $SMTP->auth($user, $pass) if $user;
     }
     $SMTP->mail( (Email::Address->parse($message->header('From')))[0]->address );
 
-    $SMTP->to( (map $_->address, Email::Address->parse($message->header('To')),
-                                 Email::Address->parse($message->header('Cc')) ),
+    $SMTP->to( (map $_->address, Email::Address->parse($message->header('To' )),
+                                 Email::Address->parse($message->header('Cc' )),
+                                 Email::Address->parse($message->header('Bcc')) ),
                { SkipBad => 1 },
              ) || return;
 
@@ -50,7 +55,10 @@ an SMTP server. The first invocation of C<send> requires an SMTP server
 arguments. Subsequent calls will remember the the first setting until
 it is reset.
 
-Any arguments passed to C<send> will be passed to C<< Net::SMTP->new() >>.
+Any arguments passed to C<send> will be passed to C<< Net::SMTP->new() >>,
+except or C<username> and C<password>. If these arguments are passed,
+they're used to invoke C<< Net::SMTP->auth() >> for SASL authentication
+support.
 
 =head1 SEE ALSO
 

@@ -1,3 +1,10 @@
+1.4    2004-07-08
+
+  - Relaxed prereq on IO::All for testing.
+  - Included Bcc in list of addresses to MAIL TO: in
+    Email::Send::SMTP.
+  - Now supports Net::SMTP's auth() (Aaron Trevena).
+
 1.3    2004-07-05
 
   - Doc typo in Email::Send::Sendmail (Martin 'Kingpin' Thurn).
