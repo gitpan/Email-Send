@@ -1,3 +1,10 @@
+1.45   2004-12-22
+
+  - Bug in Email::Send::SMTP in collecting addresses to send for RCPT.
+  - Added more error checking in Email::Send::SMTP to return proper
+    diagnostics.
+  - Updated dependencies.
+
 1.44   2004-12-17
 
   - Make Email::Send::SMTP use Return::Value for its returns. These

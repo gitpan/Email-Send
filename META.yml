@@ -1,13 +1,13 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Email-Send
-version:      1.44
+version:      1.45
 version_from: lib/Email/Send.pm
 installdirs:  site
 requires:
-    Email::Address:                
-    Email::Simple:                 
-    Return::Value:                 1.22
+    Email::Address:                1.80
+    Email::Simple:                 1.92
+    Return::Value:                 1.26
     Test::More:                    0.47
 
 distribution_type: module

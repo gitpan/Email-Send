@@ -1,9 +1,9 @@
 package Email::Send::SMTP;
-# $Id: SMTP.pm,v 1.6 2004/12/17 18:23:00 cwest Exp $
+# $Id: SMTP.pm,v 1.7 2004/12/23 01:51:29 cwest Exp $
 use strict;
 
 use vars qw[$VERSION $SMTP];
-$VERSION = (qw$Revision: 1.6 $)[1];
+$VERSION = (qw$Revision: 1.7 $)[1];
 use Net::SMTP;
 use Email::Address;
 use Return::Value;
@@ -41,14 +41,16 @@ sub send {
     }
     
     my @bad;
+    my @to;
     eval {
         my $from =
           (Email::Address->parse($message->header('From')))[0]->address;
         $SMTP->mail($from) or return failure "FROM: <$from> denied";
 
-        my @to = map {
-                       Email::Address->parse($message->header($_))->address,
-                 } qw[To Cc Bcc];
+        @to = map {
+                   map { $_->address }
+                       Email::Address->parse($message->header($_))
+                  } qw[To Cc Bcc];
         my @ok = $SMTP->to(@to, { SkipBad => 1 });
 
         if ( @to != @ok ) {
@@ -57,7 +59,9 @@ sub send {
             @bad = keys %to;
         }
     } or return failure $@;
-    
+
+    return failure "No valid recipients" if @bad == @to;
+
     return failure "Can't send data"
       unless $SMTP->data( $message->as_string );
 
