@@ -1,0 +1,109 @@
+NAME
+    Email::Send - Simply Sending Email
+
+SYNOPSIS
+      use Email::Send;
+      send SMTP => <<__MESSAGE__, $host;
+      To: casey@geeknest.com
+      From: foo@example.com
+
+      Blah
+      __MESSAGE__
+
+      use Email::Send qw[Sendmail]; # preload mailer(s)
+      my $email_obj = Email::Simple->new($msg);
+
+      send Sendmail => $email_obj;
+
+      my $mime_message = Simple::MIME->new(...);
+      send IO => $mime_message, '-'; # print to STDOUT
+
+      send My::Own::Special::Sender => $msg, %options;
+
+DESCRIPTION
+    This module provides a very simple, very clean, very specific interface
+    to multiple Email mailers. The goal if this software is to be small and
+    simple, easy to use, and easy to extend.
+
+  Mailers
+    Mailers are simple to use. You can pre-load mailers when using
+    "Email::Send".
+
+      use Email::Send qw[SMTP NNTP];
+
+    If you don't preload a mailer before you use it in the "send" function,
+    it will by dynamically loaded. Mailers are named either relative to the
+    "Email::Send" namespace, or fully qualified. For example, when using the
+    "IO" mailer, "Email::Send" first tries to load "Email::Send::IO". If
+    that fails, an attempt is made to load "IO". If that final attempt
+    fails, "Email::Send" will throw an exception.
+
+  Functions
+    send
+          my $rv = send $mailer => $message, @args;
+
+        This function tries to send $message using $mailer. $message and
+        $mailer are required arguments. Anything passed in @args is passed
+        directly to $mailer. Note that various mailers may require certain
+        arguments. Please consult the documentation for any mailer you
+        choose to use.
+
+        The format of $message is specified exactly as anything that
+        Email::Abstract can grok and return "as_string". This currently
+        includes most email building classes and a properly formatted
+        message as a string. If you have a message type that
+        "Email::Abstract" doesn't understand, read its documentation for
+        instructions on how to extend it.
+
+  Writing Mailers
+    Writing new mailers is very simple. If you want to use a short name when
+    calling "send", name your mailer under the "Email::Send" namespace. If
+    you don't, the full name will have to be used. A mailer only needs to
+    implement a single function, "send". It will be called from
+    "Email::Send" exactly like this.
+
+      Your::Sending::Package::send($message, @args);
+
+    $message is an Email::Simple object, @args are the extra arguments
+    passed into "Email::Send::send".
+
+    Here's an example of a mailer that sends email to a URL.
+
+      package Email::Send::HTTP::Post;
+      use strict;
+
+      use vars qw[$AGENT $URL $FIELD];
+      use Carp qw[croak];
+      use LWP::UserAgent;
+
+      sub send {
+          my ($message, @args);
+          if ( @args ) {
+              my ($URL, $FIELD) = @args;
+              $AGENT = LWP::UserAgent->new;
+          }
+          croak "Can't send to URL if no URL and field are named"
+            unless $URL && $FIELD;
+          $AGENT->post($URL => { $FIELD => $message->as_string });
+      }
+
+      1;
+
+    This example will keep a UserAgent singleton unless new arguments are
+    passed to "send". It is used by calling "Email::Send::send".
+
+      send HTTP::Post => $message, 'http://example.com/incoming', 'message';
+      send HTTP::Post => $message2; # uses saved $URL and $FIELD
+
+SEE ALSO
+    Email::Abstract, Email::Send::IO, Email::Send::NNTP, Email::Send::Qmail,
+    Email::Send::SMTP, Email::Send::Sendmail, perl.
+
+AUTHOR
+    Casey West, <casey@geeknest.com>.
+
+COPYRIGHT
+      Copyright (c) 2004 Casey West.  All rights reserved.
+      This module is free software; you can redistribute it and/or modify it
+      under the same terms as Perl itself.
+
