@@ -1,9 +1,9 @@
 package Email::Send::SMTP;
-# $Id: SMTP.pm,v 1.7 2004/12/23 01:51:29 cwest Exp $
+# $Id: SMTP.pm,v 1.8 2005/01/08 17:00:36 cwest Exp $
 use strict;
 
 use vars qw[$VERSION $SMTP];
-$VERSION = (qw$Revision: 1.7 $)[1];
+$VERSION = (qw$Revision: 1.8 $)[1];
 use Net::SMTP;
 use Email::Address;
 use Return::Value;
@@ -20,7 +20,7 @@ sub send {
             %args = @args;
         }
 
-        my $host = delete($args{Host});
+        my $host = delete($args{Host}) || '';
         if ( $args{ssl} ) {
             require Net::SMTP::SSL;
             $SMTP->quit if $SMTP;
@@ -58,7 +58,8 @@ sub send {
             delete @to{@ok};
             @bad = keys %to;
         }
-    } or return failure $@;
+    };
+    return failure $@ if $@;
 
     return failure "No valid recipients" if @bad == @to;
 

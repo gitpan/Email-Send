@@ -1,3 +1,10 @@
+1.46   2005-01-08
+
+  - SMTP was broken. I made a horrible mistake with my use of eval.
+    Honestly, I feel quite silly. I'm sorry.
+  - Added eg/send-email.pl, a program to aid in testing and debuging
+    of this code.
+
 1.45   2004-12-22
 
   - Bug in Email::Send::SMTP in collecting addresses to send for RCPT.
