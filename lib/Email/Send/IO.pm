@@ -1,9 +1,9 @@
 package Email::Send::IO;
-# $Id: IO.pm,v 1.1 2004/05/28 02:18:16 cwest Exp $
+# $Id: IO.pm,v 1.2 2004/07/20 22:11:46 cwest Exp $
 use strict;
 
 use vars qw[$VERSION @IO];
-$VERSION = (qw$Revision: 1.1 $)[1];
+$VERSION = (qw$Revision: 1.2 $)[1];
 @IO      = ('=');
 
 use IO::All;
@@ -11,7 +11,7 @@ use IO::All;
 sub send {
     my ($message, @args) = @_;
     @args = (@IO) unless @args;
-    eval {io(@args) << $message->as_string};
+    eval {io(@args)->print($message->as_string)};
 }
 
 1;

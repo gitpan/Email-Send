@@ -1,9 +1,9 @@
 package Email::Send;
-# $Id: Send.pm,v 1.4 2004/07/08 16:40:05 cwest Exp $
+# $Id: Send.pm,v 1.5 2004/07/20 22:11:46 cwest Exp $
 use strict;
 
 use vars qw[$VERSION];
-$VERSION   = '1.4';
+$VERSION   = '1.41';
 
 use Carp qw[croak];
 use Email::Abstract;

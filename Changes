@@ -1,3 +1,10 @@
+1.41   2004-07-20
+
+  - Only set defaults for $Sendmail and $Qmail in those mailers
+    when the package variable is not already set (Peter Scott).
+  - SSL support for Email::Send::SMTP.
+  - Use different version scheme, I need more numbers.
+
 1.4    2004-07-08
 
   - Relaxed prereq on IO::All for testing.

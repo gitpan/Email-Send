@@ -1,21 +1,37 @@
 package Email::Send::SMTP;
-# $Id: SMTP.pm,v 1.3 2004/07/08 16:40:05 cwest Exp $
+# $Id: SMTP.pm,v 1.4 2004/07/20 22:11:46 cwest Exp $
 use strict;
 
 use vars qw[$VERSION $SMTP];
-$VERSION = (qw$Revision: 1.3 $)[1];
+$VERSION = (qw$Revision: 1.4 $)[1];
 use Net::SMTP;
 use Email::Address;
 
 sub send {
     my ($message, @args) = @_;
     if ( @_ > 1 ) {
-        $SMTP->quit if $SMTP;
-        $SMTP = Net::SMTP->new(@args);
-        return unless $SMTP;
+        my %args;
+        if ( @args % 2 ) {
+            my $host = shift @args;
+            %args = @args;
+            $args{Host} = $host;
+        } else {
+            %args = @args;
+        }
+
+        if ( $args{ssl} ) {
+            require Net::SMTP::SSL;
+            $SMTP->quit if $SMTP;
+            $SMTP = Net::SMTP::SSL->new(%args);
+            return unless $SMTP;
+        } else {
+            $SMTP->quit if $SMTP;
+            $SMTP = Net::SMTP->new(%args);
+            return unless $SMTP;
+        }
         
         my ($user, $pass)
-          = @{{ @args % 2 ? (@args[1..$#args]) : (@args) }}{qw[username password]};
+          = @args{qw[username password]};
         $SMTP->auth($user, $pass) if $user;
     }
     $SMTP->mail( (Email::Address->parse($message->header('From')))[0]->address );
@@ -56,14 +72,15 @@ arguments. Subsequent calls will remember the the first setting until
 it is reset.
 
 Any arguments passed to C<send> will be passed to C<< Net::SMTP->new() >>,
-except or C<username> and C<password>. If these arguments are passed,
-they're used to invoke C<< Net::SMTP->auth() >> for SASL authentication
-support.
+with some exceptions. C<username> and C<password>, if passed, are
+used to invoke C<< Net::SMTP->auth() >> for SASL authentication support.
+C<ssl>, if set to true, turns on SSL support by using C<Net::SMTP::SSL>.
 
 =head1 SEE ALSO
 
 L<Email::Send>,
 L<Net::SMTP>,
+L<Net::SMTP::SSL>,
 L<Email::Address>,
 L<perl>.
 

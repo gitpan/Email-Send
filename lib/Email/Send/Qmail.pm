@@ -1,10 +1,10 @@
 package Email::Send::Qmail;
-# $Id: Qmail.pm,v 1.1 2004/05/28 02:18:16 cwest Exp $
+# $Id: Qmail.pm,v 1.2 2004/07/20 22:11:46 cwest Exp $
 use strict;
 
 use vars qw[$VERSION $QMAIL];
-$VERSION = (qw$Revision: 1.1 $)[1];
-$QMAIL   = q[qmail-inject];
+$VERSION = (qw$Revision: 1.2 $)[1];
+$QMAIL   ||= q[qmail-inject];
 
 sub send {
     my ($message, @args) = @_;
