@@ -1,9 +1,9 @@
 package Email::Send::SMTP;
-# $Id: SMTP.pm,v 1.4 2004/07/20 22:11:46 cwest Exp $
+# $Id: SMTP.pm,v 1.5 2004/08/07 19:26:05 cwest Exp $
 use strict;
 
 use vars qw[$VERSION $SMTP];
-$VERSION = (qw$Revision: 1.4 $)[1];
+$VERSION = (qw$Revision: 1.5 $)[1];
 use Net::SMTP;
 use Email::Address;
 
@@ -22,11 +22,11 @@ sub send {
         if ( $args{ssl} ) {
             require Net::SMTP::SSL;
             $SMTP->quit if $SMTP;
-            $SMTP = Net::SMTP::SSL->new(%args);
+            $SMTP = Net::SMTP::SSL->new(delete($args{Host}), %args);
             return unless $SMTP;
         } else {
             $SMTP->quit if $SMTP;
-            $SMTP = Net::SMTP->new(%args);
+            $SMTP = Net::SMTP->new(delete($args{Host}), %args);
             return unless $SMTP;
         }
         

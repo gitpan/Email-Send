@@ -1,3 +1,8 @@
+1.43   2004-08-07
+
+  - Make Email::Send::SMTP send args to Net::SMTP with host first.
+    This makes older Net::SMTPs happy.
+
 1.42   2004-07-29
 
   - Remove hard dependency on Email::Abstract (for IO::All).
