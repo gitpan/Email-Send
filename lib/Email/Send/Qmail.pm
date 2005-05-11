@@ -1,16 +1,24 @@
 package Email::Send::Qmail;
-# $Id: Qmail.pm,v 1.2 2004/07/20 22:11:46 cwest Exp $
+# $Id: Qmail.pm,v 1.3 2005/05/11 03:01:25 cwest Exp $
 use strict;
 
-use vars qw[$VERSION $QMAIL];
-$VERSION = (qw$Revision: 1.2 $)[1];
+use vars qw[$QMAIL];
 $QMAIL   ||= q[qmail-inject];
 
+use Return::Value;
+
+sub is_available {
+    return   `which $QMAIL`
+           ? success
+           : failure;
+}
+
 sub send {
-    my ($message, @args) = @_;
-    open QMAIL, "| $QMAIL @args" or return undef;
+    my ($class, $message, @args) = @_;
+    open QMAIL, "| $QMAIL @args" or return failure;
     print QMAIL $message->as_string;
     close QMAIL;
+    return success;
 }
 
 1;
@@ -25,7 +33,7 @@ Email::Send::Qmail - Send Messages using qmail-inject
 
   use Email::Send;
 
-  send Qmail => $message;
+  Email::Send->new({mailer => 'Qmail'})->send($message);
 
 =head1 DESCRIPTION
 

@@ -5,10 +5,13 @@ WriteMakefile (
                ABSTRACT      => "Simply Sending Email",
                NAME          => 'Email::Send',
                PREREQ_PM     => {
+                                 'Class::Accessor::Fast' => '0.19',
                                  'Email::Address' => '1.80',
                                  'Email::Simple' => '1.92',
+                                 'Module::Pluggable' => '2.8',
                                  'Return::Value' => '1.28',
                                  'Test::More' => '0.47',
+                                 'UNIVERSAL::require' => '0.03',
                                 },
                VERSION_FROM  => 'lib/Email/Send.pm',
               );

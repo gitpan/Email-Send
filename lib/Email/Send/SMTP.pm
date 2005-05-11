@@ -1,15 +1,25 @@
 package Email::Send::SMTP;
-# $Id: SMTP.pm,v 1.8 2005/01/08 17:00:36 cwest Exp $
+# $Id: SMTP.pm,v 1.9 2005/05/11 03:01:25 cwest Exp $
 use strict;
 
-use vars qw[$VERSION $SMTP];
-$VERSION = (qw$Revision: 1.8 $)[1];
+use vars qw[$SMTP];
 use Net::SMTP;
 use Email::Address;
 use Return::Value;
+use UNIVERSAL::require;
+
+sub is_available {
+    my ($class, %args) = @_;
+    my $success = 1;
+    $success = Net::SMTP->require;
+    $success = Net::SMTP::SSL->require if $args{ssl};
+    return   $success
+           ? success
+           : failure;
+}
 
 sub send {
-    my ($message, @args) = @_;
+    my ($class, $message, @args) = @_;
     if ( @_ > 1 ) {
         my %args;
         if ( @args % 2 ) {
@@ -20,7 +30,7 @@ sub send {
             %args = @args;
         }
 
-        my $host = delete($args{Host}) || '';
+        my $host = delete($args{Host}) || 'localhost';
         if ( $args{ssl} ) {
             require Net::SMTP::SSL;
             $SMTP->quit if $SMTP;
@@ -87,7 +97,12 @@ Email::Send::SMTP - Send Messages using SMTP
 
   use Email::Send;
 
-  send SMTP => $message, 'smtp.example.com';
+  my $mailer = Email::Send->new({mailer => 'SMTP'});
+  
+  $mailer->mailer_args([Host => 'smtp.example.com:465', ssl => 1])
+    if $USE_SSL;
+  
+  $mailer->send($message);
 
 =head1 DESCRIPTION
 

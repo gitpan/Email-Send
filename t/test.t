@@ -1,5 +1,5 @@
 use Test::More qw[no_plan];
-# $Id: test.t,v 1.3 2004/07/30 01:39:42 cwest Exp $
+# $Id: test.t,v 1.4 2005/05/11 03:01:26 cwest Exp $
 use strict;
 $^W =1;
 
@@ -19,7 +19,8 @@ Subject: Test
 Testing this thing out.
 __MESSAGE__
     
-        send IO => $message, 'testfile';
+        Email::Send->new({mailer => 'IO', mailer_args => ['testfile']})
+                   ->send($message);
     
         my $test = do { local $/; open T, 'testfile'; <T> };
     
@@ -40,7 +41,8 @@ __MESSAGE__
     
         my $message_text = $message->as_string;
         
-        send IO => $message_text, 'testfile';
+        Email::Send->new({mailer => 'IO', mailer_args => ['testfile']})
+                   ->send($message_text);
     
         my $test = do { local $/; open T, 'testfile'; <T> };
     

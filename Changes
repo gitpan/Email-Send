@@ -1,3 +1,9 @@
+1.99_01    2005-05-09
+
+  - Major changes to API.
+  - Changes to Makefile.PL to aid in recommended module builds.
+  - Alpha-release of new interface.
+
 1.46   2005-01-08
 
   - SMTP was broken. I made a horrible mistake with my use of eval.

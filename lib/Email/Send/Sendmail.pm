@@ -1,16 +1,24 @@
 package Email::Send::Sendmail;
-# $Id: Sendmail.pm,v 1.3 2004/07/20 22:11:46 cwest Exp $
+# $Id: Sendmail.pm,v 1.4 2005/05/11 03:01:26 cwest Exp $
 use strict;
 
-use vars qw[$VERSION $SENDMAIL];
-$VERSION  = (qw$Revision: 1.3 $)[1];
+use Return::Value;
+
+use vars qw[$SENDMAIL];
 $SENDMAIL ||= q[sendmail];
 
+sub is_available {
+    return   `which $SENDMAIL`
+           ? success
+           : failure;
+}
+
 sub send {
-    my ($message, @args) = @_;
-    open SENDMAIL, "| $SENDMAIL -t -oi @args" or return undef;
+    my ($class, $message, @args) = @_;
+    open SENDMAIL, "| $SENDMAIL -t -oi @args" or return failure;
     print SENDMAIL $message->as_string;
     close SENDMAIL;
+    return success;
 }
 
 1;
@@ -25,7 +33,7 @@ Email::Send::Sendmail - Send Messages using sendmail
 
   use Email::Send;
 
-  send Sendmail => $message;
+  Email::Send->new({mailer => 'Sendmail'})->send($message);
 
 =head1 DESCRIPTION
 

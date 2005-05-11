@@ -1,19 +1,28 @@
 package Email::Send::NNTP;
-# $Id: NNTP.pm,v 1.1 2004/05/28 02:18:16 cwest Exp $
+# $Id: NNTP.pm,v 1.2 2005/05/11 03:01:25 cwest Exp $
 use strict;
 
-use vars qw[$VERSION $NNTP];
+use vars qw[$NNTP];
 use Net::NNTP;
+use Return::Value;
+use UNIVERSAL::require;
+
+sub is_available {
+    return   Net::NNTP->require
+           ? success
+           : failure;
+}
 
 sub send {
-    my ($message, @args) = @_;
+    my ($class, $message, @args) = @_;
+    Net::NNTP->require;
     if ( @_ > 1 ) {
         $NNTP->quit if $NNTP;
         $NNTP = Net::NNTP->new(@args);
-        return unless $NNTP;
+        return failure unless $NNTP;
     }
-    return unless $NNTP->post( $message->as_string );
-    return 1;
+    return failure unless $NNTP->post( $message->as_string );
+    return success;
 }
 
 sub DESTROY {
@@ -32,7 +41,11 @@ Email::Send::NNTP - Post Messages to a News Server
 
   use Email::Send;
 
-  send NNTP => $message, 'news.example.com';
+  my $mailer = Email::Send->new({mailer => 'NNTP'});
+  
+  $mailer->mailer_args([Host => 'nntp.example.com']);
+  
+  $mailer->send($message);
 
 =head1 DESCRIPTION
 

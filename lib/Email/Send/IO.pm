@@ -1,17 +1,27 @@
 package Email::Send::IO;
-# $Id: IO.pm,v 1.2 2004/07/20 22:11:46 cwest Exp $
+# $Id: IO.pm,v 1.3 2005/05/11 03:01:25 cwest Exp $
 use strict;
 
-use vars qw[$VERSION @IO];
-$VERSION = (qw$Revision: 1.2 $)[1];
-@IO      = ('=');
+use UNIVERSAL::require;
+use Return::Value;
 
-use IO::All;
+use vars qw[@IO];
+@IO      = ('=') unless @IO;
+
+sub is_available {
+    return   IO::All->require
+           ? success
+           : failure $UNIVERSAL::require::ERROR;
+}
 
 sub send {
-    my ($message, @args) = @_;
+    my ($class, $message, @args) = @_;
+    IO::All->require or return failure;
+    IO::All->import;
     @args = (@IO) unless @args;
     eval {io(@args)->print($message->as_string)};
+    return failure $@ if $@;
+    return success;
 }
 
 1;
@@ -26,9 +36,12 @@ Email::Send::IO - Send messages using IO operations
 
   use Email::Send;
 
-  send IO => $message; # To STDERR
+  my $mailer = Email::Send->new({mailer => 'IO'});
 
-  send IO => $message, 'filename.txt'; # append to the file
+  $mailer->send($message); # To STDERR
+
+  $mailer->mailer_args('filename.txt');
+  $mailer->send($message); # write file
 
 =head1 DESCRIPTION
 
@@ -64,7 +77,7 @@ Casey West, <F<casey@geeknest.com>>.
 
 =head1 COPYRIGHT
 
-  Copyright (c) 2004 Casey West.  All rights reserved.
+  Copyright (c) 2005 Casey West.  All rights reserved.
   This module is free software; you can redistribute it and/or modify it
   under the same terms as Perl itself.
 
