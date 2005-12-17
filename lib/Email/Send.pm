@@ -3,7 +3,7 @@ package Email::Send;
 use strict;
 
 use vars qw[$VERSION];
-$VERSION   = '1.99_01';
+$VERSION   = '2.00';
 
 use base qw[Class::Accessor::Fast];
 use Email::Simple;
@@ -217,6 +217,21 @@ sub _try_all {
 		return $sent if $sent;
 	}
 	return failure "Unable to send message.";
+}
+
+# Classic Interface.
+
+sub import {
+    no strict 'refs';
+    *{(caller)[0] . '::send'} = __PACKAGE__->can('_send_function');
+}
+
+sub _send_function {
+    my ($mailer, $message, @args) = @_;
+    __PACKAGE__->new({
+    	mailer => $mailer,
+    	mailer_args => \@args,
+	})->send($message);
 }
 
 1;
