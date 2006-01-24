@@ -1,11 +1,13 @@
 package Email::Send::Sendmail;
-# $Id: Sendmail.pm,v 1.4 2005/05/11 03:01:26 cwest Exp $
+# $Id: Sendmail.pm,v 1.5 2006/01/17 22:10:55 cwest Exp $
 use strict;
 
 use Return::Value;
 
-use vars qw[$SENDMAIL];
+use vars qw[$SENDMAIL $VERSION];
 $SENDMAIL ||= q[sendmail];
+
+$VERSION   = '2.01';
 
 sub is_available {
     return   `which $SENDMAIL`

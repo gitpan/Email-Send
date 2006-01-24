@@ -1,3 +1,8 @@
+2.01    2006-01-17
+
+  - Updated tests to only check distributed mailers.
+  - Updated version numbers in all packages for proper indexing.
+
 2.00    2005-12-15
 
   - Grafted Classic interface but did not document it.
