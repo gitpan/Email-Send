@@ -1,12 +1,12 @@
 package Email::Send::IO;
-# $Id: IO.pm,v 1.5 2006/01/28 21:44:17 cwest Exp $
+# $Id: IO.pm,v 1.6 2006/01/28 23:02:44 cwest Exp $
 use strict;
 
 use UNIVERSAL::require;
 use Return::Value;
 
 use vars qw[$VERSION];
-$VERSION   = '2.03';
+$VERSION   = '2.04';
 
 use vars qw[@IO];
 @IO      = ('=') unless @IO;

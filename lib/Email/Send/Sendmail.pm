@@ -1,12 +1,12 @@
 package Email::Send::Sendmail;
-# $Id: Sendmail.pm,v 1.6 2006/01/28 21:44:18 cwest Exp $
+# $Id: Sendmail.pm,v 1.7 2006/01/28 23:02:44 cwest Exp $
 use strict;
 
 use Return::Value;
 
 use vars qw[$SENDMAIL $VERSION];
 
-$VERSION   = '2.03';
+$VERSION   = '2.04';
 
 sub is_available {
     my $class = shift;

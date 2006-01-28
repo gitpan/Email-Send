@@ -1,5 +1,5 @@
 package Email::Send::NNTP;
-# $Id: NNTP.pm,v 1.4 2006/01/28 21:44:17 cwest Exp $
+# $Id: NNTP.pm,v 1.5 2006/01/28 23:02:44 cwest Exp $
 use strict;
 
 use vars qw[$NNTP $VERSION];
@@ -7,7 +7,7 @@ use Net::NNTP;
 use Return::Value;
 use UNIVERSAL::require;
 
-$VERSION   = '2.03';
+$VERSION   = '2.04';
 
 sub is_available {
     return   Net::NNTP->require

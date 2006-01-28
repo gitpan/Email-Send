@@ -1,3 +1,7 @@
+2.04    2006-01-28
+
+  - Integrated Email::Send::Test (Adam Kennedy).
+
 2.03    2006-01-28
 
   - Updated tests to only check the interface of distributed mailers.
