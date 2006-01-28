@@ -1,9 +1,9 @@
 package Email::Send;
-# $Id: Send.pm,v 1.14 2006/01/17 22:10:54 cwest Exp $
+# $Id: Send.pm,v 1.15 2006/01/28 21:44:16 cwest Exp $
 use strict;
 
 use vars qw[$VERSION];
-$VERSION   = '2.02';
+$VERSION   = '2.03';
 
 use base qw[Class::Accessor::Fast];
 use Email::Simple;

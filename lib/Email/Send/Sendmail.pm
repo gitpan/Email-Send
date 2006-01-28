@@ -1,24 +1,44 @@
 package Email::Send::Sendmail;
-# $Id: Sendmail.pm,v 1.5 2006/01/17 22:10:55 cwest Exp $
+# $Id: Sendmail.pm,v 1.6 2006/01/28 21:44:18 cwest Exp $
 use strict;
 
 use Return::Value;
 
 use vars qw[$SENDMAIL $VERSION];
-$SENDMAIL ||= q[sendmail];
 
-$VERSION   = '2.02';
+$VERSION   = '2.03';
 
 sub is_available {
-    return   `which $SENDMAIL`
-           ? success
-           : failure;
+    my $class = shift;
+    my $status = '';
+       $status = "No Sendmail found" unless $class->_find_sendmail;
+    return success $status;
+}
+
+sub _find_sendmail {
+    my $class = shift;
+    return $SENDMAIL if defined $SENDMAIL;
+
+    my @path = split /:/, $ENV{PATH};
+    my $sendmail;
+    for (@path) {
+        if ( -x "$_/sendmail" ) {
+            $sendmail = "$_/sendmail";
+            last;
+        }
+    }
+    return $sendmail;
 }
 
 sub send {
     my ($class, $message, @args) = @_;
-    open SENDMAIL, "| $SENDMAIL -t -oi @args" or return failure;
-    print SENDMAIL $message->as_string;
+    my $mailer = $class->_find_sendmail;
+    return failure "Found $mailer but cannot execute it"
+        unless -x $mailer;
+    open SENDMAIL, "| $mailer -t -oi @args"
+        or return failure "Error executing $mailer: $!";
+    print SENDMAIL $message->as_string
+        or return failure "Error printing via pipe to $mailer: $!";
     close SENDMAIL;
     return success;
 }

@@ -1,5 +1,5 @@
 package Email::Send::Qmail;
-# $Id: Qmail.pm,v 1.4 2006/01/17 22:10:55 cwest Exp $
+# $Id: Qmail.pm,v 1.5 2006/01/28 21:44:17 cwest Exp $
 use strict;
 
 use vars qw[$QMAIL $VERSION];
@@ -7,7 +7,7 @@ $QMAIL   ||= q[qmail-inject];
 
 use Return::Value;
 
-$VERSION   = '2.02';
+$VERSION   = '2.03';
 
 sub is_available {
     return   `which $QMAIL`

@@ -5,14 +5,11 @@ $^W = 1;
 use_ok 'Email::Send';
 can_ok 'Email::Send', 'plugins', 'mailer_available', 'mailer',
                       'mailer_args', 'message_modifier', 'send', 'all_mailers';
+use_ok $_ 
+  for grep { /IO|NNTP|SMTP|Qmail|Sendmail/ } Email::Send->plugins;
 
-### Changed by ADAMK
-# You can't run can_ok on other people's drivers,
-# if you never load them. You have to do both to all.
-foreach ( Email::Send->plugins ) {
-	use_ok $_;
-	can_ok $_, 'is_available', 'send';
-}
+can_ok $_, 'is_available', 'send'
+  for grep { /IO|NNTP|SMTP|Qmail|Sendmail/ } Email::Send->plugins;
 
 my $mailer = Email::Send->new();
 isa_ok $mailer, 'Email::Send';

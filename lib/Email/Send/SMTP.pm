@@ -1,5 +1,5 @@
 package Email::Send::SMTP;
-# $Id: SMTP.pm,v 1.10 2006/01/17 22:10:55 cwest Exp $
+# $Id: SMTP.pm,v 1.11 2006/01/28 21:44:18 cwest Exp $
 use strict;
 
 use vars qw[$SMTP $VERSION];
@@ -8,7 +8,7 @@ use Email::Address;
 use Return::Value;
 use UNIVERSAL::require;
 
-$VERSION   = '2.02';
+$VERSION   = '2.03';
 
 sub is_available {
     my ($class, %args) = @_;
