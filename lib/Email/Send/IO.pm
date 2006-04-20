@@ -1,8 +1,7 @@
 package Email::Send::IO;
-# $Id: IO.pm,v 1.6 2006/01/28 23:02:44 cwest Exp $
+# $Id: IO.pm,v 1.7 2006/04/20 15:39:06 cwest Exp $
 use strict;
 
-use UNIVERSAL::require;
 use Return::Value;
 
 use vars qw[$VERSION];
@@ -12,15 +11,15 @@ use vars qw[@IO];
 @IO      = ('=') unless @IO;
 
 sub is_available {
-    return   IO::All->require
+    return   eval { require IO::All }
            ? success
-           : failure $UNIVERSAL::require::ERROR;
+           : failure "is_available: Loading IO::All failed: $@";
 }
 
 sub send {
     my ($class, $message, @args) = @_;
-    IO::All->require or return failure;
-    IO::All->import;
+    eval { require IO::All;IO::All->import };
+    return failure "send: Loading IO::All failed: $@" if $@;
     @args = (@IO) unless @args;
     eval {io(@args)->print($message->as_string)};
     return failure $@ if $@;

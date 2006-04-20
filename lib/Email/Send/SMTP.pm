@@ -1,27 +1,26 @@
 package Email::Send::SMTP;
-# $Id: SMTP.pm,v 1.12 2006/01/28 23:02:44 cwest Exp $
+# $Id: SMTP.pm,v 1.13 2006/04/20 15:39:06 cwest Exp $
 use strict;
 
 use vars qw[$SMTP $VERSION];
-use Net::SMTP;
 use Email::Address;
 use Return::Value;
-use UNIVERSAL::require;
 
 $VERSION   = '2.04';
 
 sub is_available {
     my ($class, %args) = @_;
     my $success = 1;
-    $success = Net::SMTP->require;
-    $success = Net::SMTP::SSL->require if $args{ssl};
+    $success = eval { require Net::SMTP };
+    $success = eval { require Net::SMTP::SSL } if $args{ssl};
     return   $success
            ? success
-           : failure;
+           : failure $@;
 }
 
 sub send {
     my ($class, $message, @args) = @_;
+    require Net::SMTP;
     if ( @_ > 1 ) {
         my %args;
         if ( @args % 2 ) {

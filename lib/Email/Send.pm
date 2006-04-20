@@ -1,14 +1,13 @@
 package Email::Send;
-# $Id: Send.pm,v 1.16 2006/01/28 23:02:44 cwest Exp $
+# $Id: Send.pm,v 1.17 2006/04/20 15:39:06 cwest Exp $
 use strict;
 
 use vars qw[$VERSION];
-$VERSION   = '2.04';
+$VERSION   = '2.05';
 
 use base qw[Class::Accessor::Fast];
 use Email::Simple;
 use Module::Pluggable search_path => 'Email::Send';
-use UNIVERSAL::require;
 use Return::Value;
 
 =head1 NAME
@@ -180,7 +179,7 @@ directly to the C<is_available()> method of the mailer being queried.
 sub mailer_available {
 	my ($self, $mailer, @args) = @_;
 	if ( my $package = $self->_plugin_list->{$mailer} ) {
-	    $package->require or return failure;
+	    eval "CORE::require $package" or return failure $@;
 	    $package->can('is_available')
 	      or return failure "Mailer $mailer doesn't report availability.";
 		my $test = $package->is_available(@args);
@@ -196,7 +195,7 @@ sub _objectify_message {
     return $message if UNIVERSAL::isa($message, 'Email::Simple');
     return Email::Simple->new($message) unless ref($message);
     return Email::Abstract->cast($message => 'Email::Simple')
-      if Email::Abstract->require;
+      if eval { require Email::Abstract };
     return undef;
 }
 
@@ -206,7 +205,7 @@ sub _send_it {
 	return $test unless $test;
 
     my $package = $self->_plugin_list->{$mailer};
-    $package->require or return failure;
+    eval "CORE::require $package" or return failure;
 	return $package->send($message, @{$self->mailer_args});
 }
 
@@ -242,15 +241,13 @@ __END__
 
   package Email::Send::Example;
 
-  use UNIVERSAL::require;
-
   sub is_available {
-      Net::Example->require;
+      eval { use Net::Example }
   }
 
   sub send {
       my ($class, $message, @args) = @_;
-      Net::Example->require;
+      use Net::Example;
       Net::Example->do_it($message) or return;
   }
   
@@ -273,17 +270,16 @@ Here's an example of a mailer that sends email to a URL.
   use strict;
 
   use vars qw[$AGENT $URL $FIELD];
-  use UNIVERSAL::require;
   use Return::Value;
   
   sub is_available {
-	  LWP::UserAgent->require;
+	  eval { use LWP::UserAgent }
   }
 
   sub send {
       my ($message, @args);
 
-	  LWP::UserAgent->require;
+	  use LWP::UserAgent;
 
       if ( @args ) {
           my ($URL, $FIELD) = @args;

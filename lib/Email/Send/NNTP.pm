@@ -1,23 +1,22 @@
 package Email::Send::NNTP;
-# $Id: NNTP.pm,v 1.5 2006/01/28 23:02:44 cwest Exp $
+# $Id: NNTP.pm,v 1.6 2006/04/20 15:39:06 cwest Exp $
 use strict;
 
 use vars qw[$NNTP $VERSION];
 use Net::NNTP;
 use Return::Value;
-use UNIVERSAL::require;
 
 $VERSION   = '2.04';
 
 sub is_available {
-    return   Net::NNTP->require
+    return   eval { require Net::NNTP }
            ? success
-           : failure;
+           : failure $@;
 }
 
 sub send {
     my ($class, $message, @args) = @_;
-    Net::NNTP->require;
+    eval { require Net::NNTP };
     if ( @_ > 1 ) {
         $NNTP->quit if $NNTP;
         $NNTP = Net::NNTP->new(@args);

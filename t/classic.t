@@ -1,5 +1,5 @@
 use Test::More qw[no_plan];
-# $Id: classic.t,v 1.1 2006/01/17 22:11:38 cwest Exp $
+# $Id: classic.t,v 1.2 2006/04/20 15:39:06 cwest Exp $
 use strict;
 $^W =1;
 
@@ -21,12 +21,12 @@ __MESSAGE__
     
         send('IO', $message, 'testfile');
     
-        my $test = do { local $/; open T, 'testfile'; <T> };
+        my $test = do { local $/; open T, 'testfile' or die $!; <T> };
     
         my $test_message = Email::Simple->new($test);
     
         is $test_message->as_string, $message->as_string, 'sent properly';
-    
+
         unlink 'testfile';
     }
     {

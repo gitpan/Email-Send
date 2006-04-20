@@ -11,7 +11,6 @@ WriteMakefile (
                                  'Module::Pluggable' => '2.8',
                                  'Return::Value' => '1.28',
                                  'Test::More' => '0.47',
-                                 'UNIVERSAL::require' => '0.03',
                                 },
                VERSION_FROM  => 'lib/Email/Send.pm',
               );

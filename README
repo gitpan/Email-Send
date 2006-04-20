@@ -100,15 +100,13 @@ DESCRIPTION
   Writing Mailers
       package Email::Send::Example;
 
-      use UNIVERSAL::require;
-
       sub is_available {
-          Net::Example->require;
+          eval { use Net::Example }
       }
 
       sub send {
           my ($class, $message, @args) = @_;
-          Net::Example->require;
+          use Net::Example;
           Net::Example->do_it($message) or return;
       }
   
@@ -131,17 +129,16 @@ DESCRIPTION
       use strict;
 
       use vars qw[$AGENT $URL $FIELD];
-      use UNIVERSAL::require;
       use Return::Value;
   
       sub is_available {
-              LWP::UserAgent->require;
+              eval { use LWP::UserAgent }
       }
 
       sub send {
           my ($message, @args);
 
-              LWP::UserAgent->require;
+              use LWP::UserAgent;
 
           if ( @args ) {
               my ($URL, $FIELD) = @args;
