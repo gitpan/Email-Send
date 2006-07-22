@@ -1,5 +1,4 @@
 package Email::Send::SMTP;
-# $Id: SMTP.pm,v 1.13 2006/04/20 15:39:06 cwest Exp $
 use strict;
 
 use vars qw[$SMTP $VERSION];
@@ -156,7 +155,9 @@ L<perl>.
 
 =head1 AUTHOR
 
-Casey West, <F<casey@geeknest.com>>.
+Current maintainer: Ricardo SIGNES, <F<rjbs@cpan.org>>.
+
+Original author: Casey West, <F<casey@geeknest.com>>.
 
 =head1 COPYRIGHT
 

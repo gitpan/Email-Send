@@ -4,7 +4,7 @@ use strict;
 use Return::Value;
 
 use vars qw[$VERSION];
-$VERSION   = '2.04';
+$VERSION   = '2.15';
 
 use vars qw[@IO];
 @IO      = ('=') unless @IO;
@@ -17,10 +17,10 @@ sub is_available {
 
 sub send {
     my ($class, $message, @args) = @_;
-    eval { require IO::All;IO::All->import };
+    eval { require IO::All; IO::All->import };
     return failure "send: Loading IO::All failed: $@" if $@;
     @args = (@IO) unless @args;
-    eval {io(@args)->print($message->as_string)};
+    eval {io(@args)->append($message->as_string)};
     return failure $@ if $@;
     return success;
 }
@@ -74,7 +74,9 @@ L<perl>.
 
 =head1 AUTHOR
 
-Casey West, <F<casey@geeknest.com>>.
+Current maintainer: Ricardo SIGNES, <F<rjbs@cpan.org>>.
+
+Original author: Casey West, <F<casey@geeknest.com>>.
 
 =head1 COPYRIGHT
 

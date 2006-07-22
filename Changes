@@ -1,3 +1,15 @@
+2.15    2006-07-21
+
+  - append, to not print, to IO::All objects
+  - added simple test for message modifier (response to bug from ABH)
+  - use File::Spec->path for path, not ENV{PATH} (bug 20109, Simon Flack)
+  - use Symbol.pm, not global filehandles
+  - undef is never a valid message
+  - remove use warnings
+  - plan all tests
+  - improve testing
+  - add pod tests
+
 2.11    2006-07-05
 
   - fixed bug introduced in 2.10; message modifiers were broken

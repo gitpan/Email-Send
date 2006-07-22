@@ -1,5 +1,4 @@
 package Email::Send::NNTP;
-# $Id: NNTP.pm,v 1.6 2006/04/20 15:39:06 cwest Exp $
 use strict;
 
 use vars qw[$NNTP $VERSION];
@@ -64,7 +63,9 @@ L<perl>.
 
 =head1 AUTHOR
 
-Casey West, <F<casey@geeknest.com>>.
+Current maintainer: Ricardo SIGNES, <F<rjbs@cpan.org>>.
+
+Original author: Casey West, <F<casey@geeknest.com>>.
 
 =head1 COPYRIGHT
 
