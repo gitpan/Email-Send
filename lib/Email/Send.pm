@@ -2,7 +2,7 @@ package Email::Send;
 use strict;
 
 use vars qw[$VERSION];
-$VERSION   = '2.16';
+$VERSION   = '2.17';
 
 use base qw[Class::Accessor::Fast];
 use Email::Simple;
@@ -47,7 +47,7 @@ Email::Send - Simply Sending Email
 =head1 DESCRIPTION
 
 This module provides a very simple, very clean, very specific interface
-to multiple Email mailers. The goal if this software is to be small
+to multiple Email mailers. The goal of this software is to be small
 and simple, easy to use, and easy to extend.
 
 =head2 Constructors
