@@ -25,6 +25,7 @@ t/lib/Email/Send/OK.pm
 t/lib/Email/Send/Unavail.pm
 t/lib/OKMailer.pm
 t/lib/OKMailerOO.pm
+t/lib/Without.pm
 t/modifier.t
 t/no-import.t
 t/object-mailer.t

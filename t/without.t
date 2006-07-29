@@ -1,19 +1,17 @@
-use Test::More;
+use Test::More;;
 use strict;
 $^W = 1;
 
-BEGIN { 
-  plan skip_all => "these tests require Test::Without::Module"
-    unless eval "require Test::Without::Module; 1";
+use lib 't/lib';
+
+BEGIN {
+  plan skip_all => "see t/lib/Without.pm for prereqs for these tests"
+    unless eval "use Without 'Email::Abstract'; 1;";
 
   plan tests => 3;
 
-  Test::Without::Module->import(qw(Email::Abstract));
+  use_ok('Email::Send', 'Test');
 }
-
-use lib 't/lib';
-
-BEGIN { use_ok('Email::Send', 'Test'); }
 
 { # unknown message type
   my $message = bless \(my $x = 0), "Mail::Ain't::Known";
