@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Email-Send
-version:             2.189
+version:             2.190
 abstract:            Simply Sending Email
 license:             perl
 generated_by:        ExtUtils::MakeMaker version 6.32
