@@ -7,7 +7,7 @@ use Symbol qw(gensym);
 
 use vars qw[$QMAIL $VERSION];
 $QMAIL   ||= q[qmail-inject];
-$VERSION   = '2.194';
+$VERSION   = '2.195';
 
 sub is_available {
     my $class = shift;
@@ -21,6 +21,11 @@ sub _find_qmail {
     my $class = shift;
 
     my $sendmail;
+
+    if (-x $QMAIL) {
+      return $QMAIL;
+    }
+
     for my $dir (File::Spec->path) {
         if ( -x "$dir/$QMAIL" ) {
             $sendmail = "$dir/$QMAIL";
