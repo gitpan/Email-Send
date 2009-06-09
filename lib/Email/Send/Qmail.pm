@@ -7,7 +7,7 @@ use Symbol qw(gensym);
 
 use vars qw[$QMAIL $VERSION];
 $QMAIL   ||= q[qmail-inject];
-$VERSION   = '2.195';
+$VERSION   = '2.196';
 
 sub is_available {
     my $class = shift;
@@ -75,8 +75,6 @@ the case, or you want to explicitly define the location of your
 executable, alter the C<$Email::Send::Qmail::QMAIL> package variable.
 
   $Email::Send::Qmail::QMAIL = '/usr/sbin/qmail-inject';
-
-Any arguments passed to C<send> will be passed to C<qmail-inject>.
 
 =head1 SEE ALSO
 

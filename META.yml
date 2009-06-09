@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Email-Send
-version:            2.195
+version:            2.196
 abstract:           Simply Sending Email
 author:
     - Casey West <casey@geeknest.com>

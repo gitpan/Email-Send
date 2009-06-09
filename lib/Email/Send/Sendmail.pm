@@ -7,7 +7,7 @@ use Symbol qw(gensym);
 
 use vars qw[$SENDMAIL $VERSION];
 
-$VERSION   = '2.195';
+$VERSION   = '2.196';
 
 sub is_available {
     my $class = shift;
@@ -84,9 +84,6 @@ case, or you want to explicitly define the location of your executable,
 alter the C<$Email::Send::Sendmail::SENDMAIL> package variable.
 
   $Email::Send::Sendmail::SENDMAIL = '/usr/sbin/sendmail';
-
-Any arguments passed to C<send> will be passed to C<sendmail>. The
-C<-t -oi> arguments are sent automatically.
 
 =head1 SEE ALSO
 
