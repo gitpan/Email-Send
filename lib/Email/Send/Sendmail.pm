@@ -7,7 +7,7 @@ use Symbol qw(gensym);
 
 use vars qw[$SENDMAIL $VERSION];
 
-$VERSION   = '2.197';
+$VERSION   = '2.198';
 
 sub is_available {
     my $class = shift;
@@ -25,8 +25,10 @@ sub _find_sendmail {
     my $sendmail;
     for my $dir (
       File::Spec->path,
-      File::Spec->catfile('', qw(usr sbin sendmail)),
-      File::Spec->catfile('', qw(usr lib sendmail)),
+      ($ENV{PERL_EMAIL_SEND_SENDMAIL_NO_EXTRA_PATHS} ? () : (
+        File::Spec->catfile('', qw(usr sbin)),
+        File::Spec->catfile('', qw(usr lib)),
+      ))
     ) {
         if ( -x "$dir/sendmail" ) {
             $sendmail = "$dir/sendmail";
