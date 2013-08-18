@@ -2,14 +2,18 @@ package Email::Send;
 use strict;
 
 use vars qw[$VERSION];
-$VERSION   = '2.198';
+$VERSION   = '2.199';
 
-use Email::Simple;
-use Module::Pluggable
+use Email::Simple 1.92;
+use Module::Pluggable 2.97
   search_path => 'Email::Send',
   except      => $Email::Send::__plugin_exclusion;
-use Return::Value;
-use Scalar::Util ();
+BEGIN {
+  local $Return::Value::NO_CLUCK = 1;
+  require Return::Value;
+  Return::Value->import;
+}
+use Scalar::Util 1.02 ();
 
 =head1 NAME
 
@@ -97,7 +101,7 @@ If defined, this callback is invoked every time the C<send> method is called
 on an object. The mailer object will be passed as the first argument. Second,
 the actual C<Email::Simple> object for a message will be passed. Finally, any
 additional arguments passed to C<send> will be passed to this method in the
-order they were recieved.
+order they were received.
 
 This is useful if you are sending in bulk.
 
